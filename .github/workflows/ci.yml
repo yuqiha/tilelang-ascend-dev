@@ -25,14 +25,6 @@ jobs:
       with:
         src: ${{ steps.changed-files.outputs.files }}
 
-    # - name: Get changed C++ files
-    #   id: changed-cpp-files
-    #   if: always()
-    #   run: |
-    #     CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep -E '\.(cpp|cc|cxx|h|hpp|hxx)$' | tr '\n' ' ' || true)
-    #     echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-    #     echo "Changed C++ files: $CHANGED_FILES"
-
     - name: Get changed C++ files
       id: changed-cpp-files
       run: |
