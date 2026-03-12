@@ -15,24 +15,26 @@ jobs:
     - name: Get changed Python files
       id: changed-files
       run: |
-        CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep '\.py$' | tr '\n' ' ' || true)   
+        CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep '\.py$' || true)
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         echo "Changed files: $CHANGED_FILES"
 
     - name: Ruff check
       if: steps.changed-files.outputs.files != ''
-      uses: astral-sh/ruff-action@v3
+      uses: chartboost/ruff-action@v3
       with:
         src: ${{ steps.changed-files.outputs.files }}
+
     - name: Get changed C++ files
       id: changed-cpp-files
+      if: always()
       run: |
         CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep -E '\.(cpp|cc|cxx|h|hpp|hxx)$' | tr '\n' ' ' || true)
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         echo "Changed C++ files: $CHANGED_FILES"
 
     - name: clang-format check
-      if: steps.changed-cpp-files.outputs.files != ''
+      if: always() && steps.changed-cpp-files.outputs.files != ''
       uses: DoozyX/clang-format-lint-action@v0.17
       with:
         source: '.'
