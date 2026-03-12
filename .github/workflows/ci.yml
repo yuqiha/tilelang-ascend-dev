@@ -15,13 +15,13 @@ jobs:
     - name: Get changed Python files
       id: changed-files
       run: |
-        CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep '\.py$' || true)
+        CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep '\.py$' | tr '\n' ' ' || true)
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         echo "Changed files: $CHANGED_FILES"
 
     - name: Ruff check
       if: steps.changed-files.outputs.files != ''
-      uses: astral-sh/ruff-action@v3
+      uses: chartboost/ruff-action@v3
       with:
         src: ${{ steps.changed-files.outputs.files }}
 
