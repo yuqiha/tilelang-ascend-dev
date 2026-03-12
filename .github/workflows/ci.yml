@@ -24,7 +24,24 @@ jobs:
       uses: astral-sh/ruff-action@v3
       with:
         src: ${{ steps.changed-files.outputs.files }}
+    - name: Get changed C++ files
+      id: changed-cpp-files
+      run: |
+        CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep -E '\.(cpp|cc|cxx|h|hpp|hxx)$' | tr '\n' ' ' || true)
+        echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+        echo "Changed C++ files: $CHANGED_FILES"
 
+    - name: clang-format check
+      if: steps.changed-cpp-files.outputs.files != ''
+      uses: DoozyX/clang-format-lint-action@v0.17
+      with:
+        source: '.'
+        extensions: 'h,cpp,cc,cxx,hpp,hxx'
+        exclude: 'third_party,external,build'
+        clangFormatVersion: 17
+        inplace: false
+        style: file
+  
 # name: CI
 
 # on: [pull_request]
