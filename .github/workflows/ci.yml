@@ -33,15 +33,8 @@ jobs:
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         echo "Changed C++ files: $CHANGED_FILES"
 
-    - name: Get changed C++ files
-      id: changed-cpp-files
-      run: |
-        CHANGED_CPP_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep -E '\.(cpp|cc|cxx|h|hpp|hh|icc)$' | tr '\n' ' ' || true)
-        echo "files=$CHANGED_CPP_FILES" >> $GITHUB_OUTPUT
-        echo "Changed C++ files: $CHANGED_CPP_FILES"
-
     - name: clang-format check
-      if: steps.changed-cpp-files.outputs.files != ''
+      if: ${{ always() && steps.changed-cpp-files.outputs.files != '' }}
       uses: DoozyX/clang-format-lint-action@v0.18
       with:
         source: ${{ steps.changed-cpp-files.outputs.files }}
