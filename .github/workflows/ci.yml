@@ -33,17 +33,38 @@ jobs:
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         echo "Changed C++ files: $CHANGED_FILES"
 
+    - name: Get changed C++ files
+      id: changed-cpp-files
+      if: always()
+      run: |
+        CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep -E '\.(cpp|cc|cxx|h|hpp|hxx)$' | tr '\n' ' ' || true)
+        echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+        echo "Changed C++ files: $CHANGED_FILES"
+
     - name: clang-format check
       if: always() && steps.changed-cpp-files.outputs.files != ''
-      uses: DoozyX/clang-format-lint-action@v0.17
-      with:
-        source: '.'
-        globs: ${{ steps.changed-cpp-files.outputs.files }}
-        extensions: 'h,cpp,cc,cxx,hpp,hxx'
-        exclude: 'third_party,external,build'
-        clangFormatVersion: 17
-        inplace: false
-        style: file
+      run: |
+        # Check if .clang-format exists
+        if [ ! -f .clang-format ]; then
+          echo "Warning: .clang-format not found"
+          exit 1
+        fi
+
+        # Install clang-format-17
+        sudo apt-get update && sudo apt-get install -y clang-format-17
+
+        # Check each changed file
+        for file in ${{ steps.changed-cpp-files.outputs.files }}; do
+          if [ -f "$file" ]; then
+            # Check if file needs formatting
+            if ! clang-format-17 --dry-run --Werror "$file"; then
+              echo "Format check failed for: $file"
+              echo "Run 'clang-format-17 -i $file' to fix"
+              exit 1
+            fi
+          fi
+        done
+        echo "clang-format check passed for all changed files"file
   
 # name: CI
 
