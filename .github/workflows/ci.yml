@@ -38,6 +38,7 @@ jobs:
       uses: DoozyX/clang-format-lint-action@v0.17
       with:
         source: '.'
+        globs: ${{ steps.changed-cpp-files.outputs.files }}
         extensions: 'h,cpp,cc,cxx,hpp,hxx'
         exclude: 'third_party,external,build'
         clangFormatVersion: 17
