@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      uses: chartboost/ruff-action@v3
+      uses: chartboost/ruff-action@v2
 
 # name: CI
 
