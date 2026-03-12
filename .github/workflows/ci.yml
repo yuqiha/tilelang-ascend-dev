@@ -26,6 +26,7 @@ jobs:
         src: ${{ steps.changed-files.outputs.files }}
 
     - name: Get changed C++ files
+      if: ${{ always() }}
       id: changed-cpp-files
       run: |
         CHANGED_CPP_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD \
