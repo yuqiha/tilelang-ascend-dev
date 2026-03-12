@@ -12,19 +12,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    # - name: Get changed Python files
-    #   id: changed-files
-    #   run: |
-    #     CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep '\.py$' | tr '\n' ' ' || true)
-    #     echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-    #     echo "Changed files: $CHANGED_FILES"
-
     - name: Get changed Python files
       id: changed-files
       run: |
-        CHANGED_CPP_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD \
-          | grep '\.py$' \
-          | paste -sd " " -)
+        CHANGED_FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep '\.py$' | tr '\n' ' ' || true)
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         echo "Changed files: $CHANGED_FILES"
 
