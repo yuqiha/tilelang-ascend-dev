@@ -10,6 +10,6 @@ void good_function(int x, int y) {
 class GoodClass {
 public:
   int value;
-
+int a;
   void method();
 };
