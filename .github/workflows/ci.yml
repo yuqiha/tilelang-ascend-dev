@@ -21,13 +21,10 @@ jobs:
 
     - name: Ruff check (lint & format)
       if: steps.changed-files.outputs.files != ''
-      run: |
-        pip install ruff
-        ruff check ${{ steps.changed-files.outputs.files }} --output-format=github || CHECK_EXIT=$?
-        ruff format --check ${{ steps.changed-files.outputs.files }} || FORMAT_EXIT=$?
-        if [ "${CHECK_EXIT:-0}" -ne 0 ] || [ "${FORMAT_EXIT:-0}" -ne 0 ]; then
-          exit 1
-        fi
+      uses: astral-sh/ruff-action@v3
+      with:
+        args: check --output-format=github
+        src: ${{ steps.changed-files.outputs.files }}
 
     - name: Get changed C++ files
       if: ${{ always() }}
