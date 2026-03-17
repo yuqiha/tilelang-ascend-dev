@@ -19,14 +19,14 @@ jobs:
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         echo "Changed files: $CHANGED_FILES"
 
-    - name: Ruff lint
+    - name: Ruff format check
       uses: astral-sh/ruff-action@v3
       if: steps.changed-files.outputs.files != ''
       with:
         args: format --check --diff
         src: ${{ steps.changed-files.outputs.files }}
 
-    - name: Ruff format check
+    - name: Ruff lint
       uses: astral-sh/ruff-action@v3
       if: ${{ always() && steps.changed-files.outputs.files != '' }}
       with:
