@@ -21,6 +21,7 @@ jobs:
 
     - name: Ruff check (lint & format)
       if: steps.changed-files.outputs.files != ''
+      uses: astral-sh/ruff-action@v3
       run: |
         ruff check ${{ steps.changed-files.outputs.files }} --output-format=github || CHECK_EXIT=$?
         ruff format --check ${{ steps.changed-files.outputs.files }} || FORMAT_EXIT=$?
