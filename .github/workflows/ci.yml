@@ -29,7 +29,8 @@ jobs:
       uses: astral-sh/ruff-action@v3
       if: ${{ always() && steps.changed-files.outputs.files != '' }}
       with:
-        args: format --check --diff ${{ steps.changed-files.outputs.files }}
+        args: format --check --diff
+        src: ${{ steps.changed-files.outputs.files }}
 
     - name: Get changed C++ files
       if: ${{ always() }}
