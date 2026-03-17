@@ -23,13 +23,14 @@ jobs:
       uses: astral-sh/ruff-action@v3
       if: steps.changed-files.outputs.files != ''
       with:
-        args: check ${{ steps.changed-files.outputs.files }} --output-format=github
+        args: format --check --diff
+        src: ${{ steps.changed-files.outputs.files }}
 
     - name: Ruff format check
       uses: astral-sh/ruff-action@v3
       if: ${{ always() && steps.changed-files.outputs.files != '' }}
       with:
-        args: format --check --diff
+        args: check --output-format=github
         src: ${{ steps.changed-files.outputs.files }}
 
     - name: Get changed C++ files
