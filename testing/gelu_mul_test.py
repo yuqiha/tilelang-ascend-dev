@@ -82,4 +82,3 @@ for M, N, block_M, block_N in test_configs:
     print("Test passed!")
 
 print("Kernel Output Match!")
-
